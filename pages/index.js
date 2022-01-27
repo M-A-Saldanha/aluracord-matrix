@@ -10,7 +10,7 @@ function Title(props) {
             <Tag>{props.children}</Tag>
             <style jsx>{`
                 ${Tag} {
-                    color: ${appConfig.theme.colors.neutrals['500']};
+                    color: ${appConfig.theme.colors.neutrals['700']};
                     font-seize: 24px;
                     font-weight: 600;
                 }
@@ -25,7 +25,13 @@ export default function PaginaInicial() {
     // const username = 'M-A-Saldanha';
     const [username, setUsername] = React.useState('M-A-Saldanha');
     const roteamento = useRouter();
-
+    const userImg = () => {
+        if(username.length <= 2) {
+            return `https://www.alura.com.br/imersao-react-4/assets/figurinhas/Figurinha_29.png`
+        }
+        
+        return `https://github.com/${username}.png`
+    }
     return (
         <>
             <Box
@@ -67,22 +73,9 @@ export default function PaginaInicial() {
                         }}
                     >
                         <Title tag="h2">Boas vindas de volta!</Title>
-                        <Text variant="body3" styleSheet={{ marginBottom: '32px', color: appConfig.theme.colors.neutrals[400] }}>
+                        <Text variant="body3" styleSheet={{ marginBottom: '32px', color: appConfig.theme.colors.neutrals[700] }}>
                             {appConfig.name}
                         </Text>
-
-                        {/* <input
-                              type="text"
-                              value={username}
-                              onChange={function (event) {
-                                  console.log('usuario digitou', event.target.value);
-                                  // Onde ta o valor?
-                                  const valor = event.target.value;
-                                  // Trocar o valor da variavel
-                                  // através do React e avise quem precisa
-                                  setUsername(valor);
-                              }}
-                          /> */}
                         <TextField
                             value={username}
                             onChange={function (event) {
@@ -126,10 +119,6 @@ export default function PaginaInicial() {
                             alignItems: 'center',
                             maxWidth: '200px',
                             padding: '16px',
-                            // backgroundColor: appConfig.theme.colors.neutrals[900],
-                            // border: '1px solid',
-                            // borderColor: appConfig.theme.colors.neutrals[999],
-                            // borderRadius: '10px',
                             flex: 1,
                             minHeight: '240px',
                         }}
@@ -139,7 +128,7 @@ export default function PaginaInicial() {
                                 borderRadius: '50%',
                                 marginBottom: '16px',
                             }}
-                            src={`https://github.com/${username}.png`}
+                            src={userImg()}
                         />
                         <Text
                             variant="body4"
