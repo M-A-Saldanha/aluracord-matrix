@@ -2,6 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { Box, Button, Text, TextField, Image } from '@skynexui/components';
 import appConfig from '../config.json';
+import supabaseClient from './api';
 
 function Title(props) {
     const Tag = props.tag || 'h1';
@@ -26,12 +27,17 @@ export default function PaginaInicial() {
     const [username, setUsername] = React.useState('M-A-Saldanha');
     const roteamento = useRouter();
     const userImg = () => {
+
+        const img = `https://github.com/${username}.png`
+        
+
         if(username.length <= 2) {
             return `https://www.alura.com.br/imersao-react-4/assets/figurinhas/Figurinha_29.png`
         }
-        
-        return `https://github.com/${username}.png`
+       
+        return img
     }
+
     return (
         <>
             <Box
@@ -65,7 +71,6 @@ export default function PaginaInicial() {
                             infosDoEvento.preventDefault();
                             console.log('Alguém submeteu o form');
                             roteamento.push('/chat');
-                            // window.location.href = '/chat';
                         }}
                         styleSheet={{
                             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',

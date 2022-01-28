@@ -1,29 +1,50 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
-import { username } from './index';
 import React from 'react';
+import supabaseClient from './api';
 import appConfig from '../config.json';
+
 
 export default function ChatPage() {
 
     const [mensagem, setMensagem] = React.useState('');
-    const [listaMensagens, setListaMensagens] = React.useState([])
+    const [listaMensagens, setListaMensagens] = React.useState([]);
+
+
+    React.useEffect(() => {
+        supabaseClient
+            .from('mensagens')
+            .select('*')
+            .order('id', { ascending: false })
+            .then(({ data }) => {
+                console.log('Dados da consulta:', data)
+                setListaMensagens(data)
+            })
+    }, [])
 
 
 
     function handleNovaMensagem(novaMensagem) {
 
         const mensagem = {
-            id: listaMensagens.length + 1,
-            de: 'Marco aldanha',
+            de: 'Danieloliver11',
             texto: novaMensagem
         }
 
-        setListaMensagens([
-            mensagem,
-            ...listaMensagens,
-        ]);
-    }
+        supabaseClient
+            .from('mensagens')
+            .insert([
+                mensagem
+            ])
+            .then(({ data }) => {
+                console.log('criando mensagem:', data)
+                setListaMensagens([
+                    data[0],
+                    ...listaMensagens,
+                ])
+            })
 
+
+    }
 
     return (
         <Box
@@ -127,69 +148,73 @@ function Header() {
 
 function MessageList(props) {
     console.log('MessageList', props);
+
     return (
-        <Box
-            tag="ul"
-            styleSheet={{
-                overflow: 'scroll',
-                display: 'flex',
-                flexDirection: 'column-reverse',
-                flex: 1,
-                color: appConfig.theme.colors.neutrals["000"],
-                marginBottom: '16px',
-            }}
-        >
-            {props.mensagens.map((mensagem) => {
-                return (
-                    <Text
-                        key={mensagem.id}
-                        tag="li"
-                        styleSheet={{
-                            borderRadius: '5px',
-                            padding: '6px',
-                            marginBottom: '12px',
-                            hover: {
-                                backgroundColor: appConfig.theme.colors.neutrals[700],
-                            }
-                        }}
-                    >
-                        <Box
+        <>
+            <Box
+                tag="ul"
+                styleSheet={{
+                    overflow: 'scroll',
+                    display: 'flex',
+                    flexDirection: 'column-reverse',
+                    flex: 1,
+                    color: appConfig.theme.colors.neutrals["000"],
+                    marginBottom: '16px',
+                }}
+            >
+                {props.mensagens.map((mensagem) => {
+                    return (
+                        <Text
+                            key={mensagem.id}
+                            tag="li"
                             styleSheet={{
-                                marginBottom: '15px',
-                                display: 'flex',
-                                justifyContent: 'start',
-                                alignItems: 'center'
+                                borderRadius: '5px',
+                                padding: '6px',
+                                marginBottom: '12px',
+                                hover: {
+                                    backgroundColor: appConfig.theme.colors.neutrals[700],
+                                }
                             }}
                         >
-                            <Image
+                            <Box
                                 styleSheet={{
-                                    width: '40px',
-                                    height: '40px',
-                                    borderRadius: '50%',
-                                    display: 'inline-block',
-                                    marginRight: '8px',
+                                    marginBottom: '15px',
+                                    display: 'flex',
+                                    justifyContent: 'start',
+                                    alignItems: 'center'
                                 }}
-                                src={`https://github.com/M-A-Saldanha.png`}
-                            />
-                            <Text tag="strong">
-                                {mensagem.de}
-                            </Text>
-                            <Text
-                                styleSheet={{
-                                    fontSize: '10px',
-                                    marginLeft: '8px',
-                                    color: appConfig.theme.colors.neutrals[400],
-                                }}
-                                tag="span"
                             >
-                                {(new Date().toLocaleDateString())}
-                            </Text>
-                        </Box>
-                        {mensagem.texto}
-                    </Text>
-                );
-            })}
+                                <Image
+                                    styleSheet={{
+                                        width: '40px',
+                                        height: '40px',
+                                        borderRadius: '50%',
+                                        display: 'inline-block',
+                                        marginRight: '8px',
+                                    }}
+                                    src={`https://github.com/${mensagem.de}.png`}
+                                />
+                                <Text tag="strong">
+                                    {mensagem.de}
+                                </Text>
+                                <Text
+                                    styleSheet={{
+                                        fontSize: '10px',
+                                        marginLeft: '8px',
+                                        color: appConfig.theme.colors.neutrals[400],
+                                    }}
+                                    tag="span"
+                                >
+                                    {(new Date().toLocaleDateString())}
+                                </Text>
+                            </Box>
+                            {mensagem.texto}
+                        </Text>
+                    )
+                })}
 
-        </Box>
+            </Box>
+        </>
+
     )
 }
