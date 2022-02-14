@@ -2,7 +2,6 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { Box, Button, Text, TextField, Image } from '@skynexui/components';
 import appConfig from '../config.json';
-import supabaseClient from './api';
 
 function Title(props) {
     const Tag = props.tag || 'h1';
@@ -70,7 +69,7 @@ export default function PaginaInicial() {
                         onSubmit={function (infosDoEvento) {
                             infosDoEvento.preventDefault();
                             console.log('Alguém submeteu o form');
-                            roteamento.push('/chat');
+                            roteamento.push(`/chat?username=${username}`);
                         }}
                         styleSheet={{
                             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
